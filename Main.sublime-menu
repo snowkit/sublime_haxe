@@ -1,0 +1,37 @@
+[
+  {
+    "caption": "Preferences",
+    "id": "preferences",
+    "children": [
+      {
+        "caption": "Package Settings",
+        "id": "package-settings",
+        "children": [
+          {
+            "caption": "Haxe Completion Server",
+            "id": "haxe_completion_server_options",
+            "children": [
+              {
+                "command": "open_file",
+                "args": {
+                  "file": "${packages}/haxe_completion/README.md"
+                },
+                "caption": "README"
+              },
+              {
+                "caption": "-"
+              },
+              {
+                "command": "open_file",
+                "args": {
+                  "file": "${packages}/haxe_completion/haxe_completion.sublime-settings"
+                },
+                "caption": "Settings - Default"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

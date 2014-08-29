@@ -1,0 +1,10 @@
+
+{
+  /*
+    Sets a path to find haxe. This must include the `haxe` portion, 
+    if at /usr/bin/haxe, specify /usr/bin/haxe
+  */
+  // "path_haxe_binary": '',
+  "port" : 6111
+
+}

@@ -1,2 +1,0 @@
-sublime-haxe-completion
-=======================
