@@ -13,11 +13,15 @@ plugin_path = os.path.dirname(plugin_filepath)
 
 print("hello haxe completion")
 
+hxc_settings = None
+hxc_server = None
+
 class HaxeCompletionServer( sublime_plugin.EventListener ):
 
     def __init__(self):
-        HaxeCompletionServer.server = self
-        HaxeCompletionServer.settings = sublime.load_settings('haxe_completion.sublime-settings')
+        global hxc_server, hxc_settings
+        hxc_server = self
+        hxc_settings = sublime.load_settings('haxe_completion.sublime-settings')
         print("[haxe completion] __init__")
 
     def __del__(self) :
