@@ -3,6 +3,7 @@ __version_info__ = (1, 0, 0)
 
 from .completion_init import HaxeCompletionInitCommand
 from .completion_reset import HaxeCompletionResetCommand
+from .completion_complete import HaxeCompletionCompleteCommand
 from .completion_shutdown import HaxeCompletionShutdownCommand
 
 print("Haxe Completion Server : load commands")
@@ -10,5 +11,6 @@ print("Haxe Completion Server : load commands")
 __all__ = [
     'HaxeCompletionInitCommand',
     'HaxeCompletionResetCommand',
+    'HaxeCompletionCompleteCommand',
     'HaxeCompletionShutdownCommand'
 ]

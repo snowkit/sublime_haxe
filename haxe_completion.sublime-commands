@@ -1,5 +1,4 @@
 [
-    { "caption": "Haxe Completion: init", "command": "haxe_completion_init" },
+    { "caption": "Haxe Completion: complete", "command": "haxe_completion_complete" },
     { "caption": "Haxe Completion: reset", "command": "haxe_completion_reset" },
-    { "caption": "Haxe Completion: shutdown", "command": "haxe_completion_shutdown" }
 ]

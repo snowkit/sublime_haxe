@@ -4,7 +4,9 @@
     Sets a path to find haxe. This must include the `haxe` portion, 
     if at /usr/bin/haxe, specify /usr/bin/haxe
   */
-  // "path_haxe_binary": '',
-  "port" : 6111
+  // "haxe_path" : ""
+    /*A integer for the port to host the completion server on, default 6110 */
+  "port" : 6111,
+  "derp" : "hello"
 
 }
