@@ -35,7 +35,7 @@ class HaxeCompletionExec( ExecCommand ):
         if encoding is None:
             encoding = sys.getfilesystemencoding()
 
-        self.output_view = self.window.get_output_panel("exec")
+        self.output_view = self.window.get_output_panel("haxe_completion_panel")
         self.debug_text = " ".join(cmd)
         self.encoding = encoding
         self.quiet = quiet
