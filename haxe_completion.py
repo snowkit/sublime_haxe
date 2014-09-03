@@ -105,8 +105,6 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
         if settings.has("haxe_path") is True:
             self.haxe_path = settings.get("haxe_path")
 
-        return
-
         print("[haxe completion] trying to start cache server " + self.haxe_path + ":" + str(self.port))
 
         #this only starts the completion cache host from haxe,
