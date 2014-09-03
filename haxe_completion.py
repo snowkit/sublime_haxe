@@ -17,56 +17,18 @@ stexec = getattr( Default , "exec" )
 ExecCommand = stexec.ExecCommand
 AsyncProcess = stexec.AsyncProcess
 
+try:
+  STARTUP_INFO = subprocess.STARTUPINFO()
+  STARTUP_INFO.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+  STARTUP_INFO.wShowWindow = subprocess.SW_HIDE
+except (AttributeError):
+    STARTUP_INFO = None
+
 print("hello haxe completion")
 
-
-class HaxeCompletionExec( ExecCommand ):
-
-    def run( self, cmd = [],  shell_cmd = None, file_regex = "", line_regex = "", working_dir = "",
-            encoding = None, env = {}, quiet = False, kill = False, **kwargs):
-
-        if kill:
-            if self.proc:
-                self.proc.kill()
-                self.proc = None
-                self.append_data(None, "[Cancelled]")
-            return
-
-        if encoding is None:
-            encoding = sys.getfilesystemencoding()
-
-        self.output_view = self.window.get_output_panel("haxe_completion_panel")
-        self.debug_text = " ".join(cmd)
-        self.encoding = encoding
-        self.quiet = quiet
-        self.proc = None
-
-        if working_dir != "":
-            os.chdir(working_dir)
-
-        if not quiet:
-            print( "Running " + " ".join(cmd) )
-
-        sublime.status_message("Fetching completion...")
-        # self.show_output_panel()
-
-        try:
-            self.proc = AsyncProcess( cmd, None, os.environ.copy(), self, **kwargs)
-        except OSError as e:
-            print(e)
-
-    def show_output_panel(self):
-        show_panel_on_build = sublime.load_settings("Preferences.sublime-settings").get("show_panel_on_build", True)
-        if show_panel_on_build:
-            self.window.run_command("show_panel", {"panel": "output.exec"})
-
-    def finish(self, *args, **kwargs):
-
-        super(HaxeCompletionExec, self).finish(*args, **kwargs)
-        output = self.output_view.substr(sublime.Region(0, self.output_view.size()))
-        #remove "Finished in" timing
-        output = re.sub('(\[Finished in.*\])', '', output)
-        HaxeCompletionist.current.on_exec( output.strip() )
+def plugin_unloaded():
+    del HaxeCompletionist.current
+    HaxeCompletionist.current = None
 
 
 class HaxeCompletionist( sublime_plugin.EventListener ):
@@ -81,6 +43,7 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
         print("[haxe completion] __init__")
 
     def __del__(self) :
+        print("[haxe completion] __del__")
         self.shutdown()
 
     def init(self, forced=False):
@@ -113,7 +76,7 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
         #then each request is faster, in get()
 
         try:
-            self.process = Popen( [ self.haxe_path, "-v", "--wait", str(self.port) ], env = os.environ.copy())
+            self.process = Popen( [ self.haxe_path, "-v", "--wait", str(self.port) ], env = os.environ.copy(), startupinfo=STARTUPINFO)
             self.process.poll()
 
         except(OSError, ValueError) as e:
@@ -169,5 +132,55 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
             self.process.wait()
 
         self.process = None
+
+
+class HaxeCompletionExec( ExecCommand ):
+
+    def run( self, cmd = [],  shell_cmd = None, file_regex = "", line_regex = "", working_dir = "",
+            encoding = None, env = {}, quiet = False, kill = False, **kwargs):
+
+        if kill:
+            if self.proc:
+                self.proc.kill()
+                self.proc = None
+                self.append_data(None, "[Cancelled]")
+            return
+
+        if encoding is None:
+            encoding = sys.getfilesystemencoding()
+
+        self.output_view = self.window.get_output_panel("haxe_completion_panel")
+        self.debug_text = " ".join(cmd)
+        self.encoding = encoding
+        self.quiet = quiet
+        self.proc = None
+
+        if working_dir != "":
+            os.chdir(working_dir)
+
+        if not quiet:
+            print( "Running " + " ".join(cmd) )
+
+        sublime.status_message("Fetching completion...")
+        # self.show_output_panel()
+
+        try:
+            self.proc = AsyncProcess( cmd, None, os.environ.copy(), self, **kwargs)
+        except OSError as e:
+            print(e)
+
+    def show_output_panel(self):
+        show_panel_on_build = sublime.load_settings("Preferences.sublime-settings").get("show_panel_on_build", True)
+        if show_panel_on_build:
+            self.window.run_command("show_panel", {"panel": "output.exec"})
+
+    def finish(self, *args, **kwargs):
+
+        super(HaxeCompletionExec, self).finish(*args, **kwargs)
+        output = self.output_view.substr(sublime.Region(0, self.output_view.size()))
+        #remove "Finished in" timing
+        output = re.sub('(\[Finished in.*\])', '', output)
+        HaxeCompletionist.current.on_exec( output.strip() )
+
 
 from .commands import *
