@@ -26,15 +26,19 @@ except (AttributeError):
 
 print("hello haxe completion")
 
-def plugin_unloaded():
-    del HaxeCompletionist.current
-    HaxeCompletionist.current = None
 
+_completionist_ = None
+
+def plugin_unloaded():
+    if _completionist_:
+        _completionist_.shutdown()
 
 class HaxeCompletionist( sublime_plugin.EventListener ):
 
     def __init__(self):
         HaxeCompletionist.current = self
+        global _completionist_
+        _completionist_ = self
 
         self.process = None
         self.socket = None
@@ -42,9 +46,9 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
 
         print("[haxe completion] __init__")
 
-    def __del__(self) :
-        print("[haxe completion] __del__")
-        self.shutdown()
+
+    def derp(self, fn):
+        fn("hello")
 
     def init(self, forced=False):
 
@@ -77,19 +81,18 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
 
         try:
             self.process = Popen( [ self.haxe_path, "-v", "--wait", str(self.port) ], env = os.environ.copy(), startupinfo=STARTUPINFO)
-            self.process.poll()
 
         except(OSError, ValueError) as e:
             reason = u'[haxe completion] error starting server and connecting to it: %s' % e
             print(reason)
             return None
 
-    def on_exec(self, output):
-        print("[haxe completion] on_exec")
+    def on_result(self, output):
+        print("[haxe completion] on_result")
 
         if self.on_complete is not None:
-            #fire callback
-            sublime.active_window().run_command(self.on_complete, {"result": output})
+                #fire callback
+            self.on_complete( output )
 
         self.on_complete = None
 
@@ -99,8 +102,6 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
         self.init()
         view = sublime.active_window().active_view()
         self.on_complete = on_complete
-
-        print(self)
 
         haxe_cmd = [
             self.haxe_path,
@@ -114,7 +115,6 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
             "cmd": haxe_cmd + hxml,
             "working_dir": cwd
         })
-
 
     def reset(self):
         print("[haxe completion] reset")
@@ -133,6 +133,16 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
 
         self.process = None
 
+def run_process( args ):
+    return subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, startupinfo=STARTUP_INFO).communicate()[0]
+
+class HaxeCompletionResetCommand( sublime_plugin.WindowCommand ):
+
+    def run( self ) :
+        global _completionist_
+
+        view = sublime.active_window().active_view()
+        _completionist_.reset()
 
 class HaxeCompletionExec( ExecCommand ):
 
@@ -175,12 +185,10 @@ class HaxeCompletionExec( ExecCommand ):
             self.window.run_command("show_panel", {"panel": "output.exec"})
 
     def finish(self, *args, **kwargs):
+        global _completionist_
 
         super(HaxeCompletionExec, self).finish(*args, **kwargs)
         output = self.output_view.substr(sublime.Region(0, self.output_view.size()))
         #remove "Finished in" timing
         output = re.sub('(\[Finished in.*\])', '', output)
-        HaxeCompletionist.current.on_exec( output.strip() )
-
-
-from .commands import *
+        _completionist_.on_result( output.strip() )
