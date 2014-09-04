@@ -7,8 +7,6 @@
   // "haxe_path" : ""
     /*A integer for the port to host the completion server on, default 6110 */
     
-    "port" : 6111,
-    "auto_complete_selectors": "source - string - comment - keyword.control.directive.conditional.haxe",
-    "auto_complete_triggers": [ {"selector": "source.haxe", "characters": "."} ]
-
+    "port" : 6111
+    
 }
