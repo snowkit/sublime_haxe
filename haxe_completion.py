@@ -69,6 +69,7 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
 
         if settings.has("port") is True:
             self.port = settings.get("port")
+            print("[haxe completion] load custom port as {}".format(self.port))
         if settings.has("haxe_path") is True:
             self.haxe_path = settings.get("haxe_path")
 
