@@ -478,7 +478,7 @@
       <array>
         <dict>
           <key>match</key>
-          <string>((@:)(require|final|hack|native|coreApi|fakeEnum|macro|build|keep|keepSub|overload|extern|optional|feature|noCompletion|noUsing|allow|access|generic|publicFields|expose|defineFeature|runtime|initPackage|bind|bitmap|file|font|sound|ns|protected|getter|setter|meta|debug|noDebug|headerCode|headerClassCode|cppFileCode|functionCode|functionTailCode|buildXml|cppNamespaceCode|headerNamespaceCode|noStack|depend|include|internal|volatile|transient|functionBody|classContents|remove)\b)</string>
+          <string>((@:)(abstract|access|allow|annotation|arrayAccess|autoBuild|bind|bitmap|build|buildXml|classCode|commutative|compilerGenerated|coreApi|coreType|cppFileCode|cppNamespaceCode|dce|debug|decl|defParam|delegate|depend|deprecated|event|expose|extern|fakeEnum|file|final|font|forward|from|functionCode|functionTailCode|generic|genericBuild|getter|hack|headerCode|headerNamespaceCode:|hxGen|ifFeature|include|initPackage|internal|isVar|keep|keepInit|keepSub|macro|meta|multiType|native|nativeGen|noCompletion|noDebug|noDoc|noImportGlobal|noPackageRestrict|noStack|noUsing|notNull|ns|op|optional|overload|privateAccess|property|protected|public|publicFields|readOnly|remove|require|rtti|runtime|runtimeValue|setter|sound|struct|suppressWarnings|throws|to|transient|unbound|unifyMinDynamic|unreflective|unsafe|usage|volatile)\b)</string>
           <key>captures</key>
           <dict>
             <key>2</key>
