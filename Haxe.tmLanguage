@@ -364,7 +364,7 @@
           <key>match</key>
           <string>\b(this|super)\b</string>
           <key>name</key>
-          <string>variable.language.haxe</string>
+          <string>keyword.other.variable.haxe</string>
         </dict>
         <dict>
           <key>match</key>
