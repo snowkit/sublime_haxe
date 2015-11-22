@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import sys, os, subprocess, re
+import sys, os, subprocess, re, shlex
 
 from subprocess import Popen, PIPE
 
@@ -132,8 +132,11 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
 
 def run_process( args ):
 
-    shell_cmd = " ".join(args)
     _proc = None
+    shell_cmd = ""
+    for arg in args:
+        #make sure lines from the hxml file don't trip up the shell
+        shell_cmd += shlex.quote(arg) + " "
 
     if sys.platform == "win32":
         # Use shell=True on Windows, so shell_cmd is passed through with the correct escaping
