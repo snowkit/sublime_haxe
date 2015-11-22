@@ -151,7 +151,7 @@ def run_process( args ):
             stderr=subprocess.STDOUT, startupinfo=STARTUP_INFO, shell=False,
             preexec_fn=os.setsid)
 
-    return _proc.communicate()[0]
+    return _proc, _proc.communicate()[0]
 
 class HaxeCompletionResetCommand( sublime_plugin.WindowCommand ):
 
