@@ -74,6 +74,7 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
 
         try:
             self.process = Popen( [ self.haxe_path, "-v", "--wait", str(self.port) ], env = os.environ.copy(), startupinfo=STARTUP_INFO)
+            print("[haxe completion] started on " + self.haxe_path + ":" + str(self.port))
 
         except(OSError, ValueError) as e:
             reason = u'[haxe completion] error starting server and connecting to it: %s' % e
