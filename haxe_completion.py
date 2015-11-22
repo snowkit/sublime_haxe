@@ -74,7 +74,8 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
         #then each request is faster, in get()
 
         try:
-            self.process = Popen( [ self.haxe_path, "-v", "--wait", str(self.port) ], env = os.environ.copy(), startupinfo=STARTUP_INFO)
+            self.process = run_process_bg([self.haxe_path, "-v", "--wait", str(self.port)])
+            #Popen( [ self.haxe_path, "-v", "--wait", str(self.port) ], env = os.environ.copy(), startupinfo=STARTUP_INFO)
             print("[haxe completion] started with `" + self.haxe_path + "` port:" + str(self.port))
 
         except(OSError, ValueError) as e:
@@ -133,6 +134,11 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
 
 def run_process( args ):
 
+    _proc = run_process_bg(args)
+    return _proc, _proc.communicate()[0]
+
+def run_process_bg( args ):
+
     _proc = None
     shell_cmd = ""
     for arg in args:
@@ -156,7 +162,9 @@ def run_process( args ):
             stderr=subprocess.STDOUT, startupinfo=STARTUP_INFO, shell=False,
             preexec_fn=os.setsid)
 
-    return _proc, _proc.communicate()[0]
+    return _proc
+
+
 
 class HaxeCompletionResetCommand( sublime_plugin.WindowCommand ):
 
