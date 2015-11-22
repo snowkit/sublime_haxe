@@ -66,18 +66,19 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
             print("[haxe completion] load custom port as {}".format(self.port))
         if settings.has("haxe_path") is True:
             self.haxe_path = settings.get("haxe_path")
+            print("[haxe completion] load custom haxe path as {}".format(self.haxe_path))
 
-        print("[haxe completion] trying to start cache server " + self.haxe_path + ":" + str(self.port))
+        print("[haxe completion] trying to start cache server `" + self.haxe_path + "` port:" + str(self.port))
 
         #this only starts the completion cache host from haxe,
         #then each request is faster, in get()
 
         try:
             self.process = Popen( [ self.haxe_path, "-v", "--wait", str(self.port) ], env = os.environ.copy(), startupinfo=STARTUP_INFO)
-            print("[haxe completion] started on " + self.haxe_path + ":" + str(self.port))
+            print("[haxe completion] started with `" + self.haxe_path + "` port:" + str(self.port))
 
         except(OSError, ValueError) as e:
-            reason = u'[haxe completion] error starting server and connecting to it: %s' % e
+            reason = u'[haxe completion] error starting server and connecting to it: \n%s' % e
             print(reason)
             return None
 
