@@ -130,8 +130,28 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
         self.process = None
 
 def run_process( args ):
-    _proc = Popen(args, stdout=PIPE, stderr=subprocess.STDOUT, startupinfo=STARTUP_INFO)
-    return _proc, _proc.communicate()[0]
+
+    shell_cmd = " ".join(args)
+    _proc = None
+
+    if sys.platform == "win32":
+        # Use shell=True on Windows, so shell_cmd is passed through with the correct escaping
+        _proc = subprocess.Popen(shell_cmd, stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT, startupinfo=STARTUP_INFO, shell=True)
+    elif sys.platform == "darwin":
+        # Use a login shell on OSX, otherwise the users expected env vars won't be setup
+        _proc = subprocess.Popen(["/bin/bash", "-l", "-c", shell_cmd], stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT, startupinfo=STARTUP_INFO, shell=False,
+            preexec_fn=os.setsid)
+    elif sys.platform == "linux":
+        # Explicitly use /bin/bash on Linux, to keep Linux and OSX as
+        # similar as possible. A login shell is explicitly not used for
+        # linux, as it's not required
+        _proc = subprocess.Popen(["/bin/bash", "-c", shell_cmd], stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT, startupinfo=STARTUP_INFO, shell=False,
+            preexec_fn=os.setsid)
+
+    return _proc.communicate()[0]
 
 class HaxeCompletionResetCommand( sublime_plugin.WindowCommand ):
 
