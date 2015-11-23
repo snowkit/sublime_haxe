@@ -98,6 +98,8 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
             "--display", fname + "@" + str(offset)
         ]
 
+        print("[haxe completion] haxe complete args " + str(haxe_cmd+hxml))
+
         _proc, _result_buffer = run_process( haxe_cmd+hxml )
         _result = ""
 
@@ -140,15 +142,16 @@ def run_process( args ):
 def run_process_bg( args ):
 
     _proc = None
+
+    #this shell_cmd is not used by windows
     shell_cmd = ""
     for arg in args:
         #make sure lines from the hxml file don't trip up the shell
         shell_cmd += shlex.quote(arg) + " "
 
     if sys.platform == "win32":
-        # Use shell=True on Windows, so shell_cmd is passed through with the correct escaping
-        _proc = subprocess.Popen(shell_cmd, stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT, startupinfo=STARTUP_INFO, shell=True)
+        _proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, startupinfo=STARTUP_INFO)
+
     elif sys.platform == "darwin":
         # Use a login shell on OSX, otherwise the users expected env vars won't be setup
         _proc = subprocess.Popen(["/bin/bash", "-l", "-c", shell_cmd], stdout=subprocess.PIPE,
