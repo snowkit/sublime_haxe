@@ -98,7 +98,7 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
             "--display", fname + "@" + str(offset)
         ]
 
-        print("[haxe completion] haxe complete args " + str(haxe_cmd+hxml))
+        # print("[haxe completion] haxe complete args " + str(haxe_cmd+hxml))
 
         _proc, _result_buffer = run_process( haxe_cmd+hxml )
         _result = ""
