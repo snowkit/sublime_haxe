@@ -74,7 +74,7 @@ class HaxeCompletionist( sublime_plugin.EventListener ):
         #then each request is faster, in get()
 
         try:
-            self.process = run_process_bg([self.haxe_path, "-v", "--wait", str(self.port)])
+            self.process = run_process_bg([self.haxe_path, "--wait", str(self.port)])
             #Popen( [ self.haxe_path, "-v", "--wait", str(self.port) ], env = os.environ.copy(), startupinfo=STARTUP_INFO)
             print("[haxe completion] started with `" + self.haxe_path + "` port:" + str(self.port))
 
